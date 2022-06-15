@@ -139,7 +139,7 @@
       console.log( 쿼리스트링.get('id') )
 
       db.collection('product').doc(쿼리스트링.get('id') ).get('id').then((result) => {
-        console.log (result.data()) // 감자 게시물 클릭하면 감자의 id 찾아서
+        console.log (result.data()) // 감자 게시물 클릭하면 감자의 id
       })
 
     </script>

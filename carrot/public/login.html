@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -115,6 +113,16 @@
         가입하기
       </button>
     </div>
+    <div class="container mt-3">
+          <div class="mb-3">
+            <input type="email" class="form-control" placeholder="email" id="email">
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control" placeholder="pw" id="pw">
+          </div>
+          <button type="submit" class="btn btn-primary" id="login">로그인</button>
+          <button type="submit" class="btn btn-primary" id="logout">로그아웃</button>
+       </div>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
@@ -143,7 +151,7 @@
         messagingSenderId: "358118658538",
         appId: "1:358118658538:web:4874e7c0368bfa665fe293",
         measurementId: "G-N7MG6TR7RK",
-      }; 
+      };
       firebase.initializeApp(firebaseConfig);
     </script>
 
@@ -151,11 +159,22 @@
       const db = firebase.firestore();
       const storage = firebase.storage();
 
+      $('#login').click(function() {
+        var 이메일 = $("#email").val();
+        var 패스워드 = $("#pw").val();
+        
+        firebase.auth().signInWithEmailAndPassword(이메일, 패스워드).then((result) => {
+          console.log(result.user)
+        }) 
+      
+      })
+
       $("#register").click(function () {
         // 가입하기 버튼 누르면 가입하기 진행
 
         var 이메일 = $("#email-new").val();
         var 패스워드 = $("#pw-new").val();
+        var 이름 = $('#name-new').val();
 
         firebase
           .auth()
@@ -163,8 +182,19 @@
           .then((result) => {
             console.log(result);
             console.log(result.user);
+            result.user.updateProfile({displayName : 이름}) //유저의 프로필 업데이트
           }); // 회원가입 기능 소환술 (이메일, 패스워드)
       });
+
+      firebase.auth().onAuthStateChanged((user) => { // 로그인 상태가 변할때마다 실행됨(로그인, 로그아웃, 새로고침)
+        if (user) { // 유저가 로그인된 상태라면 해당코드 실행해라
+          console.log(user);
+        }
+      });
+
+      $('#logout').click(function(){ // 로그아웃 기능
+        firebase.auth().signOut()
+      })
     </script>
   </body>
 </html>
