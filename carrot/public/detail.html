@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -15,6 +17,14 @@
       integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
       crossorigin="anonymous"
     />
+    <style>
+      .detail-pic {
+        width: 100%;
+        height: 300px;
+        background-size: cover;
+        background-position: center;
+      }
+    </style>
   </head>
   <body>
     <h1>감귤마켓</h1>
@@ -78,7 +88,17 @@
         </div>
       </div>
     </nav>
-    <div class="container mt-3"></div>
+    <div class="container">
+          상세페이지임
+          <div class="detail-pic my-4" style="background-image: url('https://placeimg.com/640/380/tech');"></div>
+          <div>
+            <h5>올린사람 : 모름</h5>
+            <hr>
+            <h5 class="title">상품명</h5>
+            <p class="date">올린날짜</p>
+            <p class="price">가격</p>
+          </div>
+      </div>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
@@ -95,7 +115,6 @@
       integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
       crossorigin="anonymous"
     ></script>
-
     <script>
       var firebaseConfig = {
         apiKey: "AIzaSyDxeBMcsLOESHig6CrpweDlU7lTjHC",
@@ -108,29 +127,21 @@
         messagingSenderId: "358118658538",
         appId: "1:358118658538:web:4874e7c0368bfa665fe293",
         measurementId: "G-N7MG6TR7RK",
-      };
+      }; 
       firebase.initializeApp(firebaseConfig);
     </script>
+
     <script>
-      const db = firebase.firestore(); // DB에서 데이터 가져오는 firebase 문법
-      db.collection("product") // 원하는 자료 뽑아오기, 괄호안에 폴더명 쓰기
-        .get() // 데이터 다 가져오기
-        .then((결과) => {
-          //console.log(결과);
-          결과.forEach((doc) => { // 데이터 2개니까 2번 돈다 -> 상품 2개를 container에 넣어준다.
-            console.log(doc.data());
-            var 템플릿 = `<div class="product">
-     <div class="thumbnail" style="background-image: url('https://via.placeholder.com/350')"></div>
-     <div class="flex-grow-1 p-4">
-       <h5 class="title"><a href="/detail.html?id=${doc.id}">${doc.data().상품명}</a> </h5>
-       <p class="date">2030년 1월 8일</p>
-       <p class="price">20000원</p>
-       <p class="float-end">♡0</p>
-     </div>
-   </div>`;
-            $(".container").append(템플릿);
-          });
-        });
+      const db = firebase.firestore();
+      const storage = firebase.storage();
+
+      var 쿼리스트링 = new URLSearchParams(window.location.search) //현재 url에 있는 query string 알아내는 법
+      console.log( 쿼리스트링.get('id') )
+
+      db.collection('product').doc(쿼리스트링.get('id') ).get('id').then((result) => {
+        console.log (result.data()) // 감자 게시물 클릭하면 감자의 id 찾아서
+      })
+
     </script>
   </body>
 </html>
