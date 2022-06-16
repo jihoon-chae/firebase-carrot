@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -87,19 +85,13 @@
         </div>
       </div>
     </nav>
+
     <div class="container">
           상세페이지임
-      <button id="edit">수정</button> 
+      <button id="edit">수정</button>
       <!-- 수정버튼 누르면 edit.html?id=감자id 로 보냄 -->
-          <div class="detail-pic my-4" style="background-image: url('https://placeimg.com/640/380/tech');"></div>
-          <div>
-            <h5>올린사람 : 모름</h5>
-            <hr>
-            <h5 class="title">상품명</h5>
-            <p class="date">올린날짜</p>
-            <p class="price">가격</p>
-          </div>
-      </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
@@ -128,7 +120,7 @@
         messagingSenderId: "358118658538",
         appId: "1:358118658538:web:4874e7c0368bfa665fe293",
         measurementId: "G-N7MG6TR7RK",
-      }; 
+      };
       firebase.initializeApp(firebaseConfig);
     </script>
 
@@ -136,16 +128,30 @@
       const db = firebase.firestore();
       const storage = firebase.storage();
 
-      var 쿼리스트링 = new URLSearchParams(window.location.search) //현재 url에 있는 query string 알아내는 법
-      console.log( 쿼리스트링.get('id') )
+      var 쿼리스트링 = new URLSearchParams(window.location.search); //현재 url에 있는 query string 알아내는 법
+      console.log(쿼리스트링.get("id"));
 
-      db.collection('product').doc(쿼리스트링.get('id') ).get('id').then((result) => { // 해당 게시물의 상세페이지로 이동하기
-        console.log (result.data()) // 감자 게시물 클릭하면 감자의 id
-      })
+      db.collection("product")
+        .doc(쿼리스트링.get("id")) // 상세페이지 만들때는 id 뽑아오기
+        .get("id")
+        .then((result) => {
+          // 해당 게시물의 상세페이지로 이동하기
+          console.log(result.data()); // 감자 게시물 클릭하면 감자의 id
+          var 템플릿 = `<div class="detail-pic my-4" style="background-image: url('https://placeimg.com/640/380/tech');"></div>
+            <div>
+              <h5>올린사람 : 모름</h5>
+              <hr>
+              <h5 class="title">${result.data().상품명}</h5>
+              <p class="date">${result.data().날짜}</p>
+              <p class="price">${result.data().가격} 원</p>
+              <p class="content">${result.data().내용}</p>
+            </div>`;
+          $(".container").append(템플릿);
+        });
 
-      $('#edit').click(function(){
-        window.location.href = '/edit.html?id=' + 쿼리스트링.get('id') // 누르면  edit.html?id=감자id 로 이동
-      })
+      $("#edit").click(function () {
+        window.location.href = "/edit.html?id=" + 쿼리스트링.get("id"); // 누르면  edit.html?id=감자id 로 이동
+      });
     </script>
   </body>
 </html>
