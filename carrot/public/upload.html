@@ -160,8 +160,8 @@
           가격: $("#price").val(),
           내용: $("#content").val(),
           날짜: new Date(),
-          이미지 : url,
-          uid : 
+          uid : JSON.parse(localStorage.getItem('user')).uid, // user라고 저장했던 데이터 뽑아내기
+          이름 : JSON.parse(localStorage.getItem('user')).displayName, 
         }; // id가 title에 입력한값(val())
         db.collection("product")
           .add(저장할거)
