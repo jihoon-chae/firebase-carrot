@@ -19,7 +19,7 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">감귤마켓</a>
+        <a class="navbar-brand" href="/">감귤마켓</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -91,7 +91,7 @@
         id="price"
         placeholder="price"
       />
-      <button class="btn btn-danger mt-3" id="send">올리기</button>
+      <button class="btn btn-danger mt-3" id="send">수정</button>
     </div>
     <div class="container mt-3"></div>
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
@@ -128,9 +128,33 @@
     </script>
     <script>
       const db = firebase.firestore();
-      const storage = firebase.storage(); 
+      const storage = firebase.storage();
 
-      
+      var 쿼리스트링 = new URLSearchParams(window.location.search);
+      쿼리스트링.get("id");
+
+      db.collection("product")
+        .doc(쿼리스트링.get("id"))
+        .get()
+        .then((result) => {
+          console.log(result.data());
+          $("#title").val(result.data().상품명);
+          $("#content").val(result.data().내용);
+          $("#price").val(result.data().가격);
+        }); // 수정페이지 들어가면 해당 상품의 데이터를 가져와서 화면에 보여줌
+
+      $("#send").click(function () {
+        var 바꿀거 = {
+          상품명: $("#title").val(),
+          가격 : $('#price').val(),
+          내용: $("#content").val(),
+        };
+        db.collection("product")
+          .doc(쿼리스트링.get("id"))
+          .update( 바꿀거 ); // 감자감자 게시물 상품명을 사과사과로  바꾸기
+      });
+
+
     </script>
   </body>
 </html>
