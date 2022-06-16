@@ -17,10 +17,11 @@
     />
   </head>
   <body>
-    <h1>감귤마켓</h1>
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">감귤마켓</a>
+        <span class="ms-auto mx-2" id="userName">유저이름</span>
+
         <button
           class="navbar-toggler"
           type="button"
@@ -175,7 +176,7 @@
         var 이메일 = $("#email-new").val();
         var 패스워드 = $("#pw-new").val();
         var 이름 = $('#name-new').val();
-
+        
         firebase
           .auth()
           .createUserWithEmailAndPassword(이메일, 패스워드)
@@ -186,15 +187,22 @@
           }); // 회원가입 기능 소환술 (이메일, 패스워드)
       });
 
-      firebase.auth().onAuthStateChanged((user) => { // 로그인 상태가 변할때마다 실행됨(로그인, 로그아웃, 새로고침)
-        if (user) { // 유저가 로그인된 상태라면 해당코드 실행해라
-          console.log(user);
-        }
-      });
-
       $('#logout').click(function(){ // 로그아웃 기능
         firebase.auth().signOut()
+        localStorage.removeItem('user') // 로그아웃 했을때 유저데이터 삭제
       })
+
+      var 뺀거 = localStorage.getItem('user'); // 로컬스토리지에 저장한 자료를 가져오기
+      $('#userName').html(JSON.parse(뺀거).displayName) // parse가 따옴표 제거해줌
+
+      firebase.auth().onAuthStateChanged((user) => { // 로그인 상태가 변할때마다 실행됨(로그인, 로그아웃, 새로고침), 약간 오래걸림
+        if (user) { // 유저가 로그인된 상태라면 해당코드 실행해라
+          console.log(user);
+          console.log(user.displayName)
+          localStorage.setItem('user', JSON.stringify(user))   
+          // $('#userName').html(user.displayName) // 내가 로그인한 이름을 화면에 보여줌
+        }
+      });
     </script>
   </body>
 </html>
