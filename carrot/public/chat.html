@@ -163,6 +163,18 @@
       const storage = firebase.storage();
 
       var 내uid = JSON.parse(localStorage.getItem('user')).uid
+      var 채팅방id;
+      var 데이터 = { // 채팅 내용, 날짜, 작성자 담기 
+        content : $('#chat-input').val(),
+        date : new Date(),
+        uid : 내uid
+      }
+
+      $('#send').click(function() { // 전송버튼 누르면 messages폴더에 추가해주기
+
+        db.collection('chatroom').doc(채팅방id).collection('messages').add(데이터) // doc은 고구마채팅방 uid
+        console.log($('#chat-input').val())
+      })
 
 
       db.collection('chatroom').where('who', 'array-contains', 내uid).get().then((result)=>{ // chatroom 컬렉션에서 내 uid가 포함되어있는 document를 다 가져와
@@ -174,7 +186,10 @@
           </li>`
     $('.chat-list').append(template) // ul태그 안에 li태그 넣어주세요
 
-          
+          //저거 박스 누르면 채팅방 id 가져오는 코드
+    $('.list-group-item').click(function(){
+      var 채팅방id = $(this).children('.text-small').text() // this는 현재 누른요소 안에 클래스를 찾아서 글자가져오기 
+    });
           // li태그 추가해주셈
         })
 
